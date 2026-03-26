@@ -41,7 +41,18 @@ def load_listing_results(html_path) -> list[tuple]:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    pass
+    lst = []
+    with open(html_path, "r", encoding="utf-8-sig") as f:
+        file = f.read()
+        soup = BeautifulSoup(file, 'html.parser')
+        listings = soup.find_all('div', class_="c1l1h97y")
+        for listing in listings:
+            title = listing.find('div', class_="t1jojoys").text
+            id = re.findall(r"\/(\d+)\?", listing.find('a').get('href'))[0]
+            lst.append((title, id))
+        print(lst)
+        return lst
+
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
@@ -237,9 +248,12 @@ class TestCases(unittest.TestCase):
 
 def main():
     detailed_data = create_listing_database(os.path.join("html_files", "search_results.html"))
-    output_csv(detailed_data, "airbnb_dataset.csv")
+    # output_csv(detailed_data, "airbnb_dataset.csv")
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    full_path = os.path.join(base_path, "html_files\search_results.html")
+    load_listing_results(full_path)
 
 
 if __name__ == "__main__":
     main()
-    unittest.main(verbosity=2)
+    # unittest.main(verbosity=2)
