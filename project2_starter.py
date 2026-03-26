@@ -50,7 +50,7 @@ def load_listing_results(html_path) -> list[tuple]:
             title = listing.find('div', class_="t1jojoys").text
             id = re.findall(r"\/(\d+)\?", listing.find('a').get('href'))[0]
             lst.append((title, id))
-        print(lst)
+        # print(lst)
         return lst
 
     # ==============================
@@ -206,7 +206,8 @@ class TestCases(unittest.TestCase):
     def test_load_listing_results(self):
         # TODO: Check that the number of listings extracted is 18.
         # TODO: Check that the FIRST (title, id) tuple is  ("Loft in Mission District", "1944564").
-        pass
+        self.assertEqual(len(self.listings), 18)
+        self.assertEqual(self.listings[0], ("Loft in Mission District", "1944564"))
 
     def test_get_listing_details(self):
         html_list = ["467507", "1550913", "1944564", "4614763", "6092596"]
@@ -249,11 +250,11 @@ class TestCases(unittest.TestCase):
 def main():
     detailed_data = create_listing_database(os.path.join("html_files", "search_results.html"))
     # output_csv(detailed_data, "airbnb_dataset.csv")
-    base_path = os.path.abspath(os.path.dirname(__file__))
-    full_path = os.path.join(base_path, "html_files\search_results.html")
-    load_listing_results(full_path)
+    # base_path = os.path.abspath(os.path.dirname(__file__))
+    # full_path = os.path.join(base_path, "html_files\search_results.html")
+    # load_listing_results(full_path)
 
 
 if __name__ == "__main__":
     main()
-    # unittest.main(verbosity=2)
+    unittest.main(verbosity=2)
