@@ -213,12 +213,18 @@ class TestCases(unittest.TestCase):
         html_list = ["467507", "1550913", "1944564", "4614763", "6092596"]
 
         # TODO: Call get_listing_details() on each listing id above and save results in a list.
+        id_list = []
+        for id in html_list:
+            get_listing_details(id).append(id_list)
 
         # TODO: Spot-check a few known values by opening the corresponding listing_<id>.html files.
         # 1) Check that listing 467507 has the correct policy number "STR-0005349".
         # 2) Check that listing 1944564 has the correct host type "Superhost" and room type "Entire Room".
         # 3) Check that listing 1944564 has the correct location rating 4.9.
-        pass
+        self.assertEqual(id_list[0]["policy_number"], "STR-0005439")
+        self.assertEqual(id_list[2]["host_type"], "Superhost")
+        self.assertEqual(id_list[2]["room_type"], "Entire Room")
+        self.assertAlmostEqual(id_list[2]["location_rating"], 4.9)
 
     def test_create_listing_database(self):
         # TODO: Check that each tuple in detailed_data has exactly 7 elements:
@@ -257,4 +263,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    unittest.main(verbosity=2)
+    # unittest.main(verbosity=2)
