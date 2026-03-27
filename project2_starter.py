@@ -109,15 +109,11 @@ def get_listing_details(listing_id) -> dict:
             for s in sp:
                 if "Superhost" in s.get_text():
                     host_type = "Superhost"
-                    # print(s)
-                    print(host_type)
 
             host_name = ""
-            di = soup.find_all('h2', class_="hnwb2pb")
-            # for d in di:
-                # if "Hosted by" in d:
-                    # host_name = 
-
+            di = soup.find_all('div', class_="tehcqxo")
+            for d in di:
+                host_name = re.findall(r"Hosted by (.+)Joined in .+", d.get_text())[0]
         
         out = {listing_id: {"policy_number": policy_number, "host_type": host_type, "host_name": host_name, "room_type": "room_type", "location_rating": "location_rating"}}
         print(out)
@@ -146,22 +142,22 @@ def create_listing_database(html_path) -> list[tuple]:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    listings = load_listing_results(html_path)
-    database = []
-    for listing_title, listing_id in listings:
-        details = get_listing_details(listing_id)
-        info = details[listing_id]
-        row = (
-            listing_title,
-            listing_id,
-            info["policy_number"],
-            info["host_type"],
-            info["host_name"],
-            info["room_type"],
-            info["location_rating"]
-        )
-        database.append(row)
-    return database
+    # listings = load_listing_results(html_path)
+    # database = []
+    # for listing_title, listing_id in listings:
+    #     details = get_listing_details(listing_id)
+    #     info = details[listing_id]
+    #     row = (
+    #         listing_title,
+    #         listing_id,
+    #         info["policy_number"],
+    #         info["host_type"],
+    #         info["host_name"],
+    #         info["room_type"],
+    #         info["location_rating"]
+    #     )
+    #     database.append(row)
+    # return database
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
