@@ -81,7 +81,10 @@ def get_listing_details(listing_id) -> dict:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    pass
+    with open(f"listing_{listing_id}.html") as f:
+        file = f.read()
+        print(file)
+        # Jayden is working on this!!
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
