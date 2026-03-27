@@ -161,7 +161,6 @@ def create_listing_database(html_path) -> list[tuple]:
             info["location_rating"]
         )
         database.append(row)
-# make sure to adjust depending on how implement get_listing_details()
     return database
     # ==============================
     # YOUR CODE ENDS HERE
