@@ -91,6 +91,8 @@ def get_listing_details(listing_id) -> dict:
         with open(full_path, 'r', encoding="utf-8-sig") as f:
             file = f.read()
             soup = BeautifulSoup(file, 'html.parser')
+
+            # POLICY_NUMBER
             li = soup.find_all('li', class_='f19phm7j')
             for l in li:
                 if "Policy" in l.get_text():
@@ -99,13 +101,27 @@ def get_listing_details(listing_id) -> dict:
                         policy_number = "Pending"
                     elif "exempt" in policy_number.title():
                         policy_number = "Exempt"
-                print(policy_number)
+                # print(policy_number)
+            
+            # HOST_TYPE
             host_type = "regular"
             sp = soup.find_all('span', class_="l1dfad8f")
             for s in sp:
                 if "Superhost" in s.get_text():
                     host_type = "Superhost"
-        return {listing_id: {"policy_number": policy_number, "host_type": host_type}}
+                    # print(s)
+                    print(host_type)
+
+            host_name = ""
+            di = soup.find_all('h2', class_="hnwb2pb")
+            # for d in di:
+                # if "Hosted by" in d:
+                    # host_name = 
+
+        
+        out = {listing_id: {"policy_number": policy_number, "host_type": host_type, "host_name": host_name, "room_type": "room_type", "location_rating": "location_rating"}}
+        print(out)
+        return out
     except Exception as e:
         print(e)
 
@@ -130,23 +146,23 @@ def create_listing_database(html_path) -> list[tuple]:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    # listings = load_listing_results(html_path)
-    # database = []
-    # for listing_title, listing_id in listings:
-    #     details = get_listing_details(listing_id)
-    #     info = details[listing_id]
-    #     row = (
-    #         listing_title,
-    #         listing_id,
-    #         info["policy_number"],
-    #         info["host_type"],
-    #         info["host_name"],
-    #         info["room_type"],
-    #         info["location_rating"]
-    #     )
-    #     database.append(row)
+    listings = load_listing_results(html_path)
+    database = []
+    for listing_title, listing_id in listings:
+        details = get_listing_details(listing_id)
+        info = details[listing_id]
+        row = (
+            listing_title,
+            listing_id,
+            info["policy_number"],
+            info["host_type"],
+            info["host_name"],
+            info["room_type"],
+            info["location_rating"]
+        )
+        database.append(row)
 # make sure to adjust depending on how implement get_listing_details()
-    # return database
+    return database
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
