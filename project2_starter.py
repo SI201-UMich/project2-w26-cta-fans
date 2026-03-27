@@ -12,6 +12,8 @@
 # --- ARGUMENTS & EXPECTED RETURN VALUES PROVIDED --- #
 # --- SEE INSTRUCTIONS FOR FULL DETAILS ON METHOD IMPLEMENTATION --- #
 
+from fileinput import filename
+
 from bs4 import BeautifulSoup
 import re
 import os
@@ -106,6 +108,7 @@ def get_listing_details(listing_id) -> dict:
         return {listing_id: {"policy_number": policy_number, "host_type": host_type}}
     except Exception as e:
         print(e)
+
         # Jayden is working on this!!
     # ============================
     # YOUR CODE ENDS HERE
@@ -166,8 +169,12 @@ def output_csv(data, filename) -> None:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    pass
-    # ==============================
+    data.sort(key=lambda x: x[6], reverse=True)
+    with open(filename, 'w', encoding="utf-8-sig", newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["title", "listing_id", "policy_number", "host_type", "host_name", "room_type", "location_rating"])
+        for listing in data:
+            writer.writerow(listing)
     # YOUR CODE ENDS HERE
     # ==============================
 
