@@ -114,8 +114,24 @@ def get_listing_details(listing_id) -> dict:
             di = soup.find_all('div', class_="tehcqxo")
             for d in di:
                 host_name = re.findall(r"Hosted by (.+)Joined in .+", d.get_text())[0]
+
+            room_type = ""
+            di2 = soup.find_all('div', class_="_cv5qq4")
+            for d2 in di2:
+                if re.search(r"Entire.+", d2.get_text())[0]:
+                    room_type = "Entire Room"
+                elif re.search(r"Shared.+", d2.get_text())[0]:
+                    room_type = "Shared Room"
+                elif re.search(r"Private.+", d2.get_text())[0]:
+                    room_type = "Private Room"
+
+            location_rating = 0.0
+            sp2 = soup.find_all('span', class_="_12si43g")
+            for s2 in sp2: 
+                location_rating = float(re.findall(r"(\d\.\d)\d", s2.get_text())[0])
+
         
-        out = {listing_id: {"policy_number": policy_number, "host_type": host_type, "host_name": host_name, "room_type": "room_type", "location_rating": "location_rating"}}
+        out = {listing_id: {"policy_number": policy_number, "host_type": host_type, "host_name": host_name, "room_type": room_type, "location_rating": location_rating}}
         print(out)
         return out
     except Exception as e:
