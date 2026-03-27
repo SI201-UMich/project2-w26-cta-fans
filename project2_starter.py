@@ -84,6 +84,7 @@ def get_listing_details(listing_id) -> dict:
     with open(f"listing_{listing_id}.html") as f:
         file = f.read()
         print(file)
+        soup = BeautifulSoup(file, 'html.parser')
         # Jayden is working on this!!
     # ==============================
     # YOUR CODE ENDS HERE
