@@ -81,12 +81,33 @@ def get_listing_details(listing_id) -> dict:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    with open(f"listing_{listing_id}.html") as f:
-        file = f.read()
-        print(file)
-        soup = BeautifulSoup(file, 'html.parser')
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    new_path = os.path.join(base_path, "html_files")
+    full_path = os.path.join(new_path, f"listing_{listing_id}.html")
+
+    try:
+        with open(full_path, 'r', encoding="utf-8-sig") as f:
+            file = f.read()
+            soup = BeautifulSoup(file, 'html.parser')
+            li = soup.find_all('li', class_='f19phm7j')
+            for l in li:
+                if "Policy" in l.get_text():
+                    policy_number = l.find("span").text
+                    if "pending" in policy_number.title():
+                        policy_number = "Pending"
+                    elif "exempt" in policy_number.title():
+                        policy_number = "Exempt"
+                print(policy_number)
+            host_type = "regular"
+            sp = soup.find_all('span', class_="l1dfad8f")
+            for s in sp:
+                if "Superhost" in s.get_text():
+                    host_type = "Superhost"
+        return {listing_id: {"policy_number": policy_number, "host_type": host_type}}
+    except Exception as e:
+        print(e)
         # Jayden is working on this!!
-    # ==============================
+    # ============================
     # YOUR CODE ENDS HERE
     # ==============================
 
@@ -235,16 +256,16 @@ class TestCases(unittest.TestCase):
         # TODO: Call get_listing_details() on each listing id above and save results in a list.
         id_list = []
         for id in html_list:
-            get_listing_details(id).append(id_list)
+            id_list.append(get_listing_details(id))
 
         # TODO: Spot-check a few known values by opening the corresponding listing_<id>.html files.
         # 1) Check that listing 467507 has the correct policy number "STR-0005349".
         # 2) Check that listing 1944564 has the correct host type "Superhost" and room type "Entire Room".
         # 3) Check that listing 1944564 has the correct location rating 4.9.
-        self.assertEqual(id_list[0]["policy_number"], "STR-0005439")
-        self.assertEqual(id_list[2]["host_type"], "Superhost")
-        self.assertEqual(id_list[2]["room_type"], "Entire Room")
-        self.assertAlmostEqual(id_list[2]["location_rating"], 4.9)
+        self.assertEqual(id_list[0]["467507"]["policy_number"], "STR-0005349")
+        self.assertEqual(id_list[2]["1944564"]["host_type"], "Superhost")
+        self.assertEqual(id_list[2]["1944564"]["room_type"], "Entire Room")
+        self.assertAlmostEqual(id_list[2]["1944564"]["location_rating"], 4.9)
 
     def test_create_listing_database(self):
         # TODO: Check that each tuple in detailed_data has exactly 7 elements:
@@ -283,4 +304,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # unittest.main(verbosity=2)
+    unittest.main(verbosity=2)
