@@ -93,6 +93,7 @@ def get_listing_details(listing_id) -> dict:
             soup = BeautifulSoup(file, 'html.parser')
 
             # POLICY_NUMBER
+            policy_number = "Pending"
             li = soup.find_all('li', class_='f19phm7j')
             for l in li:
                 if "Policy" in l.get_text():
@@ -113,32 +114,36 @@ def get_listing_details(listing_id) -> dict:
             host_name = ""
             di = soup.find_all('div', class_="tehcqxo")
             for d in di:
-                host_name = re.findall(r"Hosted by (.+)Joined in .+", d.get_text())[0]
+                matches = re.findall(r"Hosted by (.+)Joined in .+", d.get_text())
+                if matches:
+                    host_name = matches[0]
 
+            # ROOM TYPE
             room_type = ""
             di2 = soup.find_all('div', class_="_cv5qq4")
             for d2 in di2:
-                if re.search(r"Entire.+", d2.get_text())[0]:
+                if re.search(r"Entire.+", d2.get_text()):
                     room_type = "Entire Room"
-                elif re.search(r"Shared.+", d2.get_text())[0]:
+                elif re.search(r"Shared.+", d2.get_text()):
                     room_type = "Shared Room"
-                elif re.search(r"Private.+", d2.get_text())[0]:
+                elif re.search(r"Private.+", d2.get_text()):
                     room_type = "Private Room"
 
+            # LOCATION RATING
             location_rating = 0.0
             sp2 = soup.find_all('span', class_="_12si43g")
             for s2 in sp2: 
-                location_rating = float(re.findall(r"(\d\.\d)\d", s2.get_text())[0])
+                matches = re.findall(r"(\d\.\d)\d", s2.get_text())
+                if matches:
+                    location_rating = float(matches[0])
 
         
         out = {listing_id: {"policy_number": policy_number, "host_type": host_type, "host_name": host_name, "room_type": room_type, "location_rating": location_rating}}
-        print(out)
+        # print(out)
         return out
     except Exception as e:
         print(e)
-
-        # Jayden is working on this!!
-    # ============================
+    # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
 
