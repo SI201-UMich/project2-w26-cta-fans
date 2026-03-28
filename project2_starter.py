@@ -102,9 +102,9 @@ def get_listing_details(listing_id) -> dict:
             for l in li:
                 if "Policy" in l.get_text():
                     policy_number = l.find("span").text
-                    if "pending" in policy_number.title():
+                    if "pending" in policy_number.lower():
                         policy_number = "Pending"
-                    elif "exempt" in policy_number.title():
+                    elif "exempt" in policy_number.lower():
                         policy_number = "Exempt"
                 # print(policy_number)
             
@@ -372,6 +372,7 @@ class TestCases(unittest.TestCase):
         # TODO: Check that the list contains exactly "16204265" for this dataset.
         invalid_listings = validate_policy_numbers(self.detailed_data)
         self.assertEqual(invalid_listings, ["16204265"])
+
 
 
 def main():
