@@ -210,12 +210,12 @@ def output_csv(data, filename) -> None:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    data.sort(key=lambda x: x[6], reverse=True)
-    with open(filename, 'w', encoding="utf-8-sig", newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(["title", "listing_id", "policy_number", "host_type", "host_name", "room_type", "location_rating"])
-        for listing in data:
-            writer.writerow(listing)
+    sorted_data = sorted(data, key=lambda x: x[6], reverse=True)
+    with open(filename, 'w', newline='', encoding="utf-8-sig") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["listing_title", "listing_id", "policy_number", "host_type", "host_name", "room_type", "location_rating"])
+        for row in sorted_data:
+            writer.writerow(row)
     # YOUR CODE ENDS HERE
     # ==============================
 
@@ -377,6 +377,7 @@ class TestCases(unittest.TestCase):
 
 def main():
     detailed_data = create_listing_database(os.path.join("html_files", "search_results.html"))
+    output_csv(detailed_data, "airbnb_listings.csv")
 
 
 if __name__ == "__main__":
