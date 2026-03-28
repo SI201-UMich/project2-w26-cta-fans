@@ -1,0 +1,14 @@
+I’m not sure if the current system is doing enough to keep short-term rental platforms in check. 
+Right now, the system depends on third parties to keep an eye on Airbnb and make sure they’re following the 
+rules, but Airbnb doesn’t want to share their numbers and doesn’t let anyone scrape their website. I think the 
+city should think about making some stricter rules, especially ones that might discourage big short-term rental 
+businesses such as AirBnB considering the impact they have on local rental economies in already housing-insufficient markets.
+
+When it comes to web scraping, it’s really important to think about what consumers want and need. A lot of 
+legal stuff about web scraping happens when companies are sued for collecting publicly available data to help 
+people make better choices. Of course, companies are all about making money, so it’s important to have rules 
+that protect consumers too.
+
+Instead of collecting data on each person individually, let’s collect it in groups. 
+Even if the data is public, we should always take out any information that could identify someone. 
+Also, we should stop creating “influential” content that uses this kind of data.
