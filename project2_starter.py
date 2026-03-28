@@ -13,6 +13,7 @@
 # --- SEE INSTRUCTIONS FOR FULL DETAILS ON METHOD IMPLEMENTATION --- #
 
 from fileinput import filename
+from importlib.resources import path
 
 from bs4 import BeautifulSoup
 import re
@@ -236,7 +237,20 @@ def avg_location_rating_by_room_type(data) -> dict:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    pass
+    ratings = {}
+    counts = {}
+    for listing in data:
+        room_type = listing[5]
+        location_rating = listing[6]
+        if location_rating != 0.0:
+            if room_type in ratings:
+                ratings[room_type] += location_rating
+                counts[room_type] += 1
+            else:
+                ratings[room_type] = location_rating
+                counts[room_type] = 1
+    avg_ratings = {room_type: ratings[room_type] / counts[room_type] for room_type in ratings}
+    return avg_ratings
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
@@ -257,7 +271,14 @@ def validate_policy_numbers(data) -> list[str]:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    pass
+    invalid_listings = []
+    for listing in data:
+        listing_id = listing[1]
+        policy_number = listing[2]
+        if policy_number not in ["Pending", "Exempt"]:
+            if not re.match(r"^STR-\d{7}$", policy_number):
+                invalid_listings.append(listing_id)
+    return invalid_listings
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
@@ -329,9 +350,12 @@ class TestCases(unittest.TestCase):
         # TODO: Call output_csv() to write the detailed_data to a CSV file.
         # TODO: Read the CSV back in and store rows in a list.
         # TODO: Check that the first data row matches ["Guesthouse in San Francisco", "49591060", "STR-0000253", "Superhost", "Ingrid", "Entire Room", "5.0"].
-
+        output_csv(self.detailed_data, out_path)
+        with open(out_path, 'r', encoding="utf-8-sig") as file:
+            reader = csv.reader(file)
+            rows = list(reader)
+        self.assertEqual(rows[1], ["Guesthouse in San Francisco", "49591060", "STR-0000253", "Superhost", "Ingrid", "Entire Room", "5.0"]) 
         os.remove(out_path)
-
     def test_avg_location_rating_by_room_type(self):
         # TODO: Call avg_location_rating_by_room_type() and save the output.
         # TODO: Check that the average for "Private Room" is 4.9.
