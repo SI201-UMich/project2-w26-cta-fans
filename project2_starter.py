@@ -133,6 +133,12 @@ def get_listing_details(listing_id) -> dict:
                     room_type = "Private Room"
 
             # LOCATION RATING
+            location_rating = 0.0
+            di3 = soup.find('div', class_="_y1ba89", string="Location")
+            if di3:
+                rating = di3.find_next_sibling('div', class_="_bgq2leu")
+                if rating:
+                    location_rating = float(rating.text.strip())
             # for d3 in di3:
             #     if re.search("Location", d3.get_text()):
             #         matches = re.findall(r"(\d\.\d) out of 5.0", d3.get_text())
@@ -141,7 +147,7 @@ def get_listing_details(listing_id) -> dict:
 
         
         out = {listing_id: {"policy_number": policy_number, "host_type": host_type, "host_name": host_name, "room_type": room_type, "location_rating": location_rating}}
-        print(out)
+        # print(out)
         return out
     except Exception as e:
         print(e)
@@ -165,22 +171,22 @@ def create_listing_database(html_path) -> list[tuple]:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    # listings = load_listing_results(html_path)
-    # database = []
-    # for listing_title, listing_id in listings:
-    #     details = get_listing_details(listing_id)
-    #     info = details[listing_id]
-    #     row = (
-    #         listing_title,
-    #         listing_id,
-    #         info["policy_number"],
-    #         info["host_type"],
-    #         info["host_name"],
-    #         info["room_type"],
-    #         info["location_rating"]
-    #     )
-    #     database.append(row)
-    # return database
+    listings = load_listing_results(html_path)
+    database = []
+    for listing_title, listing_id in listings:
+        details = get_listing_details(listing_id)
+        info = details[listing_id]
+        row = (
+            listing_title,
+            listing_id,
+            info["policy_number"],
+            info["host_type"],
+            info["host_name"],
+            info["room_type"],
+            info["location_rating"]
+        )
+        database.append(row)
+    return database
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
