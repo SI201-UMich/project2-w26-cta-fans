@@ -272,12 +272,11 @@ def validate_policy_numbers(data) -> list[str]:
     # YOUR CODE STARTS HERE
     # ==============================
     invalid_listings = []
-    for listing in data:
-        listing_id = listing[1]
-        policy_number = listing[2]
-        if policy_number not in ["Pending", "Exempt"]:
-            if not re.match(r"^STR-\d{7}$", policy_number):
-                invalid_listings.append(listing_id)
+    for _, listing_id, policy_number, _, _, _, _ in data:
+        if policy_number in ["Pending", "Exempt"]:
+            continue
+        if not re.match(r"^STR-000\d{4}$", policy_number) and not re.match(r"^20\d{2}\-00\d{4}STR$", policy_number):
+            invalid_listings.append(listing_id)
     return invalid_listings
     # ==============================
     # YOUR CODE ENDS HERE
@@ -298,7 +297,12 @@ def google_scholar_searcher(query):
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    pass
+    url = f"https://scholar.google.com/scholar?q={query}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        titles = [h3.text for h3 in soup.find_all('h3', class_='gs_rt')]
+        return titles
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
@@ -356,23 +360,22 @@ class TestCases(unittest.TestCase):
             rows = list(reader)
         self.assertEqual(rows[1], ["Guesthouse in San Francisco", "49591060", "STR-0000253", "Superhost", "Ingrid", "Entire Room", "5.0"]) 
         os.remove(out_path)
+
     def test_avg_location_rating_by_room_type(self):
         # TODO: Call avg_location_rating_by_room_type() and save the output.
         # TODO: Check that the average for "Private Room" is 4.9.
-        pass
+        avg_ratings = avg_location_rating_by_room_type(self.detailed_data)
+        self.assertAlmostEqual(avg_ratings["Private Room"], 4.9)
 
     def test_validate_policy_numbers(self):
         # TODO: Call validate_policy_numbers() on detailed_data and save the result into a variable invalid_listings.
         # TODO: Check that the list contains exactly "16204265" for this dataset.
-        pass
+        invalid_listings = validate_policy_numbers(self.detailed_data)
+        self.assertEqual(invalid_listings, ["16204265"])
 
 
 def main():
     detailed_data = create_listing_database(os.path.join("html_files", "search_results.html"))
-    # output_csv(detailed_data, "airbnb_dataset.csv")
-    # base_path = os.path.abspath(os.path.dirname(__file__))
-    # full_path = os.path.join(base_path, "html_files\search_results.html")
-    # load_listing_results(full_path)
 
 
 if __name__ == "__main__":
